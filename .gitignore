@@ -1,0 +1,38 @@
+# Environment variables (SENSITIVE)
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Project docs (local only)
+CHANNELS.md
+SPEC.md
