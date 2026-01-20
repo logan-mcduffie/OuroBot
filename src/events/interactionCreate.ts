@@ -1,5 +1,6 @@
 import { Events, Interaction, EmbedBuilder, TextChannel, ThreadAutoArchiveDuration, MessageFlags } from 'discord.js';
 import { getDb } from '../database/db';
+import { refreshSupportInstructions } from '../utils/supportInstructions';
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -31,7 +32,7 @@ module.exports = {
 
       if (!command) return;
 
-      if (interaction.commandName === 'faq') {
+      if (interaction.commandName === 'faq' || interaction.commandName === 'rtfm') {
         const focusedValue = interaction.options.getFocused();
         const db = await getDb();
         const choices = await db.all('SELECT topic FROM faq_entries WHERE topic LIKE ? LIMIT 25', [`%${focusedValue}%`]);
@@ -120,9 +121,12 @@ Or copy the terminal output where you ran the MCP server.`
             // Store in DB
             const db = await getDb();
             await db.run(
-                'INSERT INTO support_threads (thread_id, user_id, title, status) VALUES (?, ?, ?, ?)',
+                'INSERT INTO support_threads (thread_id, user_id, title, status, last_activity_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)',
                 [thread.id, interaction.user.id, title, 'open']
             );
+
+            // Refresh the support instructions message (keeps it at the bottom)
+            await refreshSupportInstructions(client);
 
             // Delete the ephemeral confirmation after a short delay
             await interaction.deleteReply();

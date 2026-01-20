@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, MessageFlags } from 'discord.js';
 import { Command } from '../types';
 
 const LINE = '\u200B';
@@ -58,7 +58,7 @@ ${LINE}`
 Check out the repo: https://github.com/logan-mcduffie/Hytale-Toolkit` }
       );
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
   }
 };
 
