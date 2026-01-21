@@ -2,11 +2,23 @@ import { Events, GuildMember, EmbedBuilder, TextChannel } from 'discord.js';
 
 const JOINS_LEAVES_CHANNEL_ID = process.env.DISCORD_JOINS_CHANNEL_ID!;
 
+const MEMBER_ROLE_ID = process.env.DISCORD_MEMBER_ROLE_ID!;
+
 module.exports = {
   name: Events.GuildMemberAdd,
   async execute(member: GuildMember, client: any) {
-    // Don't welcome bots
+    // Don't process bots
     if (member.user.bot) return;
+
+    // Auto-assign Member role
+    try {
+      if (MEMBER_ROLE_ID) {
+        await member.roles.add(MEMBER_ROLE_ID);
+        console.log(`Assigned Member role to ${member.user.tag}`);
+      }
+    } catch (error) {
+      console.error(`Failed to assign Member role to ${member.user.tag}:`, error);
+    }
 
     const welcomeEmbed = new EmbedBuilder()
       .setTitle('Welcome to Hytale Toolkit!')
